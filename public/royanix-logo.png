@@ -1,0 +1,9 @@
+// This is a placeholder image. Replace with the actual logo
+// For development, we'll use a simple colored rectangle
+export default function LogoPlaceholder() {
+  return (
+    <div className="w-full h-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-lg rounded">
+      ROYANIX
+    </div>
+  )
+}
