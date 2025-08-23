@@ -1,8 +1,37 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import Header from '../../components/Header'
 import Footer from '../../components/Footer'
 import ProductGrid from '../../components/ProductGrid'
 
 export default function Products() {
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories')
+      if (response.ok) {
+        const data = await response.json()
+        setCategories(data.filter(cat => cat.active))
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId)
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -21,32 +50,38 @@ export default function Products() {
         {/* Product Categories Filter */}
         <div className="mb-8">
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="bg-primary-600 text-white px-4 py-2 rounded-full text-sm font-medium">
+            <button 
+              onClick={() => handleCategoryClick('all')}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                selectedCategory === 'all'
+                  ? 'bg-primary-600 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              }`}
+            >
               All Products
             </button>
-            <button className="bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-full text-sm font-medium">
-              All-Purpose
-            </button>
-            <button className="bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-full text-sm font-medium">
-              Kitchen
-            </button>
-            <button className="bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-full text-sm font-medium">
-              Bathroom
-            </button>
-            <button className="bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-full text-sm font-medium">
-              Floor Care
-            </button>
-            <button className="bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-full text-sm font-medium">
-              Glass & Surface
-            </button>
-            <button className="bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-full text-sm font-medium">
-              Specialty
-            </button>
+            
+            {!loading && categories.map((category) => (
+              <button 
+                key={category._id}
+                onClick={() => handleCategoryClick(category._id)}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                  selectedCategory === category._id
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {category.name}
+                {category.productCount > 0 && (
+                  <span className="ml-1 text-xs opacity-75">({category.productCount})</span>
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Products Grid */}
-        <ProductGrid />
+        <ProductGrid category={selectedCategory === 'all' ? null : selectedCategory} />
       </div>
 
       <Footer />

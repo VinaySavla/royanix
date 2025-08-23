@@ -13,11 +13,11 @@ export default function Header() {
         <div className="flex justify-between items-center py-4">
           <Link href="/" className="flex items-center space-x-3">
             <Image
-              src="/royanix-logo.svg"
+              src="/LogoTransparent.png"
               alt="Royanix"
               width={120}
               height={80}
-              className="h-12 w-auto"
+              className="h-12 w-auto bg-transparent"
             />
           </Link>
 
@@ -36,13 +36,6 @@ export default function Header() {
               Contact
             </Link>
           </nav>
-
-          {/* Admin Link */}
-          <div className="hidden md:block">
-            <Link href="/admin" className="text-sm text-gray-500 hover:text-primary-600">
-              Admin
-            </Link>
-          </div>
 
           {/* Mobile menu button */}
           <button
@@ -74,9 +67,6 @@ export default function Header() {
               </Link>
               <Link href="/contact" className="text-gray-700 hover:text-primary-600 font-medium py-2">
                 Contact
-              </Link>
-              <Link href="/admin" className="text-gray-500 hover:text-primary-600 py-2">
-                Admin
               </Link>
             </nav>
           </div>

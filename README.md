@@ -129,4 +129,4 @@ This project is licensed under the MIT License.
 
 ## Support
 
-For support, email support@royanix.com or create an issue in the repository.
+For support, email royanix@gmail.com or create an issue in the repository.

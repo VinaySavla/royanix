@@ -3,17 +3,32 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-export default function ProductGrid({ featured = false }) {
+export default function ProductGrid({ featured = false, category = null }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchProducts()
-  }, [])
+  }, [featured, category])
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(`/api/products${featured ? '?featured=true' : ''}`)
+      let url = '/api/products'
+      const params = new URLSearchParams()
+      
+      if (featured) {
+        params.append('featured', 'true')
+      }
+      
+      if (category) {
+        params.append('category', category)
+      }
+      
+      if (params.toString()) {
+        url += `?${params.toString()}`
+      }
+      
+      const response = await fetch(url)
       if (response.ok) {
         const data = await response.json()
         setProducts(data)

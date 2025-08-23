@@ -14,7 +14,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto text-center">
           <div className="mb-8">
             <Image
-              src="/royanix-logo.svg"
+              src="/Logo.png"
               alt="Royanix Logo"
               width={300}
               height={200}
@@ -50,6 +50,16 @@ export default function Home() {
             Featured Products
           </h2>
           <ProductGrid featured={true} />
+          
+          {/* View All Products Button */}
+          <div className="text-center mt-12">
+            <Link href="/products" className="btn-primary inline-flex items-center">
+              View All Products
+              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </section>
 

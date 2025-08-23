@@ -13,8 +13,9 @@ export default function Footer() {
               while protecting our environment. Kingly clean, pure liquid solutions for your home and business.
             </p>
             <div className="text-gray-300">
-              <p>📧 info@royanix.com</p>
-              <p>📞 +1 (555) 123-4567</p>
+              <p>📧 royanix@gmail.com</p>
+              <p>📞 +91 95941 00444</p>
+              <p>📍 Mumbai, Maharashtra, India</p>
             </div>
           </div>
 
