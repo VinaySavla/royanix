@@ -6,8 +6,9 @@ import Category from '../../../../models/Category'
 export async function GET(request, { params }) {
   try {
     await dbConnect()
-
-    const product = await Product.findById(params.id).populate('category', 'name')
+    
+    const { id } = await params
+    const product = await Product.findById(id).populate('category', 'name')
 
     if (!product) {
       return NextResponse.json(
@@ -30,6 +31,7 @@ export async function PUT(request, { params }) {
   try {
     await dbConnect()
 
+    const { id } = await params
     const body = await request.json()
     
     // Validate that category exists if provided
@@ -44,7 +46,7 @@ export async function PUT(request, { params }) {
     }
 
     const product = await Product.findByIdAndUpdate(
-      params.id,
+      id,
       body,
       { new: true, runValidators: true }
     ).populate('category', 'name')
@@ -69,8 +71,9 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   try {
     await dbConnect()
-
-    const product = await Product.findByIdAndDelete(params.id)
+    
+    const { id } = await params
+    const product = await Product.findByIdAndDelete(id)
 
     if (!product) {
       return NextResponse.json(

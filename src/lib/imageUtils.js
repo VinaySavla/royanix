@@ -30,16 +30,51 @@ export const compressImage = (file, maxSizeKB = 250, quality = 0.8) => {
       canvas.width = width;
       canvas.height = height;
       
-      // Draw and compress
+      // For PNG files with transparency, preserve transparency
+      const isPNG = file.type === 'image/png';
+      let format = isPNG ? 'image/png' : 'image/jpeg';
+      
+      if (isPNG) {
+        // Clear canvas with transparent background for PNG
+        ctx.clearRect(0, 0, width, height);
+      } else {
+        // Fill with white background for JPEG
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, width, height);
+      }
+      
+      // Draw image
       ctx.drawImage(img, 0, 0, width, height);
       
       // Try different quality levels until we get under maxSizeKB
       let currentQuality = quality;
-      let compressedDataUrl = canvas.toDataURL('image/jpeg', currentQuality);
+      let compressedDataUrl;
       
-      while (getBase64SizeKB(compressedDataUrl) > maxSizeKB && currentQuality > 0.1) {
-        currentQuality -= 0.1;
+      if (isPNG) {
+        // PNG doesn't support quality parameter, try reducing dimensions instead
+        compressedDataUrl = canvas.toDataURL('image/png');
+        
+        // If PNG is too large, try converting to JPEG with white background
+        if (getBase64SizeKB(compressedDataUrl) > maxSizeKB) {
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(0, 0, width, height);
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          compressedDataUrl = canvas.toDataURL('image/jpeg', currentQuality);
+          format = 'image/jpeg';
+          
+          while (getBase64SizeKB(compressedDataUrl) > maxSizeKB && currentQuality > 0.1) {
+            currentQuality -= 0.1;
+            compressedDataUrl = canvas.toDataURL('image/jpeg', currentQuality);
+          }
+        }
+      } else {
         compressedDataUrl = canvas.toDataURL('image/jpeg', currentQuality);
+        
+        while (getBase64SizeKB(compressedDataUrl) > maxSizeKB && currentQuality > 0.1) {
+          currentQuality -= 0.1;
+          compressedDataUrl = canvas.toDataURL('image/jpeg', currentQuality);
+        }
       }
       
       if (getBase64SizeKB(compressedDataUrl) > maxSizeKB) {
@@ -88,4 +123,30 @@ export const validateImageFile = (file) => {
   }
   
   return true;
+};
+
+/**
+ * Compress multiple images and return as an object
+ */
+export const compressMultipleImages = async (files, maxSizeKB = 250, quality = 0.8) => {
+  const results = {};
+  
+  if (files.primary) {
+    validateImageFile(files.primary);
+    results.image = await compressImage(files.primary, maxSizeKB, quality);
+  }
+  
+  if (files.secondary) {
+    validateImageFile(files.secondary);
+    results.secondaryImage = await compressImage(files.secondary, maxSizeKB, quality);
+  }
+  
+  return results;
+};
+
+/**
+ * Check if image has transparency (for PNG files)
+ */
+export const hasTransparency = (imageDataUrl) => {
+  return imageDataUrl.startsWith('data:image/png');
 };

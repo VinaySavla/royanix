@@ -16,6 +16,7 @@ export default function ProductManagement() {
     description: '',
     category: '',
     image: '',
+    secondaryImage: '',
     featured: false,
     size: ''
   })
@@ -55,7 +56,7 @@ export default function ProductManagement() {
     }
   }
 
-  const handleImageUpload = async (e) => {
+  const handleImageUpload = async (e, imageType = 'primary') => {
     const file = e.target.files[0]
     if (!file) return
 
@@ -68,10 +69,11 @@ export default function ProductManagement() {
       // Compress image
       const compressedImage = await compressImage(file, 250) // Max 250KB
       
-      // Update form data
-      setFormData({ ...formData, image: compressedImage })
+      // Update form data based on image type
+      const imageField = imageType === 'secondary' ? 'secondaryImage' : 'image'
+      setFormData({ ...formData, [imageField]: compressedImage })
       
-      console.log(`Image compressed to: ${getBase64SizeKB(compressedImage).toFixed(2)}KB`)
+      console.log(`${imageType} image compressed to: ${getBase64SizeKB(compressedImage).toFixed(2)}KB`)
       
     } catch (error) {
       alert(error.message)
@@ -134,6 +136,7 @@ export default function ProductManagement() {
       description: '',
       category: defaultCategory,
       image: '',
+      secondaryImage: '',
       featured: false,
       size: ''
     })
@@ -147,6 +150,7 @@ export default function ProductManagement() {
       description: product.description,
       category: product.category?._id || product.category || '',
       image: product.image || '',
+      secondaryImage: product.secondaryImage || '',
       featured: product.featured || false,
       size: product.size || ''
     })
@@ -270,13 +274,13 @@ export default function ProductManagement() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Product Image
+                    Primary Product Image
                   </label>
                   <div className="space-y-2">
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handleImageUpload}
+                      onChange={(e) => handleImageUpload(e, 'primary')}
                       disabled={imageUploading}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                     />
@@ -286,15 +290,54 @@ export default function ProductManagement() {
                     {formData.image && (
                       <div className="mt-2">
                         <p className="text-sm text-green-600 mb-2">
-                          Image size: {getBase64SizeKB(formData.image).toFixed(2)}KB
+                          Primary image size: {getBase64SizeKB(formData.image).toFixed(2)}KB
                         </p>
                         <Image
                           src={formData.image}
-                          alt="Preview"
+                          alt="Primary Preview"
                           width={200}
                           height={150}
                           className="rounded-md border border-gray-300 object-cover"
                         />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Secondary Product Image (Optional)
+                  </label>
+                  <div className="space-y-2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, 'secondary')}
+                      disabled={imageUploading}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    />
+                    <p className="text-xs text-gray-500">
+                      Supports JPEG, PNG (with transparency), and WebP formats. Max 250KB after compression.
+                    </p>
+                    {formData.secondaryImage && (
+                      <div className="mt-2">
+                        <p className="text-sm text-green-600 mb-2">
+                          Secondary image size: {getBase64SizeKB(formData.secondaryImage).toFixed(2)}KB
+                        </p>
+                        <Image
+                          src={formData.secondaryImage}
+                          alt="Secondary Preview"
+                          width={200}
+                          height={150}
+                          className="rounded-md border border-gray-300 object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setFormData({ ...formData, secondaryImage: '' })}
+                          className="mt-2 text-sm text-red-600 hover:text-red-800"
+                        >
+                          Remove Secondary Image
+                        </button>
                       </div>
                     )}
                   </div>
@@ -388,26 +431,53 @@ export default function ProductManagement() {
                   <tr key={product._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <div className="flex-shrink-0 h-12 w-12">
-                          {product.image ? (
-                            <Image
-                              src={product.image}
-                              alt={product.name}
-                              width={48}
-                              height={48}
-                              className="rounded-lg object-cover"
-                            />
-                          ) : (
-                            <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                              <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                              </svg>
-                            </div>
-                          )}
+                        <div className="flex-shrink-0 flex space-x-2">
+                          {/* Primary Image */}
+                          <div className="relative">
+                            {product.image ? (
+                              <Image
+                                src={product.image}
+                                alt={product.name}
+                                width={48}
+                                height={48}
+                                className="rounded-lg object-cover"
+                              />
+                            ) : (
+                              <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center">
+                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                              </div>
+                            )}
+                            <span className="absolute -bottom-1 -right-1 text-xs bg-blue-500 text-white px-1 rounded">1</span>
+                          </div>
+                          
+                          {/* Secondary Image */}
+                          <div className="relative">
+                            {product.secondaryImage ? (
+                              <Image
+                                src={product.secondaryImage}
+                                alt={`${product.name} - Secondary`}
+                                width={48}
+                                height={48}
+                                className="rounded-lg object-cover"
+                              />
+                            ) : (
+                              <div className="h-12 w-12 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+                                <span className="text-xs text-gray-400">2</span>
+                              </div>
+                            )}
+                            {product.secondaryImage && (
+                              <span className="absolute -bottom-1 -right-1 text-xs bg-green-500 text-white px-1 rounded">2</span>
+                            )}
+                          </div>
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">{product.name}</div>
                           <div className="text-sm text-gray-500">{product.description.substring(0, 50)}...</div>
+                          {product.secondaryImage && (
+                            <div className="text-xs text-green-600 mt-1">✓ Has secondary image</div>
+                          )}
                         </div>
                       </div>
                     </td>
