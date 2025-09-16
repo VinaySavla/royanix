@@ -59,10 +59,18 @@ const ProductSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
-  size: {
-    type: String,
-    default: '',
-  },
+  sizeVariants: [{
+    size: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    }
+  }],
 }, {
   timestamps: true,
 })

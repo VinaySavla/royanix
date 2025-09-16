@@ -211,13 +211,36 @@ export default function ProductDetailPage() {
                       ⭐ Featured
                     </span>
                   )}
-                  {product.size && (
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800">
-                      📦 {product.size}
-                    </span>
-                  )}
                 </div>
               </div>
+
+              {/* Size Variants */}
+              {product.sizeVariants && product.sizeVariants.length > 0 && (
+                <div className="bg-white p-6 rounded-lg shadow-sm border hover-lift">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Available Sizes & Pricing</h3>
+                  <div className="grid gap-3">
+                    {product.sizeVariants.map((variant, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
+                            <svg className="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">{variant.size}</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          {variant.price && (
+                            <div className="text-lg font-bold text-green-600">₹{variant.price}</div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Description */}
               <div className="prose prose-gray max-w-none">

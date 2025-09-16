@@ -227,7 +227,7 @@ export default function UserManagement({ currentUser }) {
                     type="text"
                     value={profileData.username}
                     onChange={(e) => setProfileData({ ...profileData, username: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                   />
                 </div>
 
@@ -239,7 +239,7 @@ export default function UserManagement({ currentUser }) {
                     type="email"
                     value={profileData.email}
                     onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                   />
                 </div>
 
@@ -255,7 +255,7 @@ export default function UserManagement({ currentUser }) {
                         type="password"
                         value={profileData.currentPassword}
                         onChange={(e) => setProfileData({ ...profileData, currentPassword: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                       />
                     </div>
 
@@ -267,7 +267,7 @@ export default function UserManagement({ currentUser }) {
                         type="password"
                         value={profileData.newPassword}
                         onChange={(e) => setProfileData({ ...profileData, newPassword: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                       />
                     </div>
 
@@ -279,7 +279,7 @@ export default function UserManagement({ currentUser }) {
                         type="password"
                         value={profileData.confirmPassword}
                         onChange={(e) => setProfileData({ ...profileData, confirmPassword: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                       />
                     </div>
                   </div>
@@ -333,7 +333,7 @@ export default function UserManagement({ currentUser }) {
                     required
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                   />
                 </div>
 
@@ -346,7 +346,7 @@ export default function UserManagement({ currentUser }) {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                   />
                 </div>
 
@@ -360,7 +360,7 @@ export default function UserManagement({ currentUser }) {
                     minLength="6"
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                   />
                 </div>
 
@@ -371,7 +371,7 @@ export default function UserManagement({ currentUser }) {
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                   >
                     <option value="admin">Admin</option>
                     <option value="superadmin">Super Admin</option>

@@ -132,7 +132,27 @@ export default function ProductGrid({ featured = false, category = null }) {
               )}
             </div>
             <h3 className="font-semibold text-lg text-gray-900 mb-2">{product.name}</h3>
-            <p className="text-gray-600 text-sm mb-4 line-clamp-3">{product.description}</p>
+            <p className="text-gray-600 text-sm mb-3 line-clamp-3">{product.description}</p>
+            
+            {/* Size Variants */}
+            {product.sizeVariants && product.sizeVariants.length > 0 && (
+              <div className="mb-3">
+                <div className="flex flex-wrap gap-1">
+                  {product.sizeVariants.slice(0, 3).map((variant, index) => (
+                    <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+                      {variant.size}
+                      {variant.price && (
+                        <span className="ml-1 text-green-600 font-medium">₹{variant.price}</span>
+                      )}
+                    </span>
+                  ))}
+                  {product.sizeVariants.length > 3 && (
+                    <span className="text-xs text-gray-500">+{product.sizeVariants.length - 3} more</span>
+                  )}
+                </div>
+              </div>
+            )}
+            
             <div className="flex items-center justify-between">
               <span className="text-xs bg-primary-100 text-primary-800 px-2 py-1 rounded-full hover-glow">
                 {product.category?.name || 'Cleaning'}

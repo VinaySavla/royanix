@@ -18,7 +18,7 @@ export default function ProductManagement() {
     image: '',
     secondaryImage: '',
     featured: false,
-    size: ''
+    sizeVariants: [{ size: '', price: '' }]
   })
 
   useEffect(() => {
@@ -138,7 +138,7 @@ export default function ProductManagement() {
       image: '',
       secondaryImage: '',
       featured: false,
-      size: ''
+      sizeVariants: [{ size: '', price: '' }]
     })
     setShowAddForm(false)
     setEditingProduct(null)
@@ -152,7 +152,9 @@ export default function ProductManagement() {
       image: product.image || '',
       secondaryImage: product.secondaryImage || '',
       featured: product.featured || false,
-      size: product.size || ''
+      sizeVariants: product.sizeVariants && product.sizeVariants.length > 0 
+        ? product.sizeVariants 
+        : [{ size: '', price: '' }]
     })
     setEditingProduct(product)
     setShowAddForm(true)
@@ -236,7 +238,7 @@ export default function ProductManagement() {
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                     />
                   </div>
 
@@ -248,7 +250,7 @@ export default function ProductManagement() {
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                     >
                       <option value="">Select a category</option>
                       {categories.map(cat => (
@@ -267,7 +269,7 @@ export default function ProductManagement() {
                     rows="4"
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                     placeholder="Describe the product's features and benefits..."
                   />
                 </div>
@@ -282,7 +284,7 @@ export default function ProductManagement() {
                       accept="image/*"
                       onChange={(e) => handleImageUpload(e, 'primary')}
                       disabled={imageUploading}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                     />
                     {imageUploading && (
                       <p className="text-sm text-blue-600">Compressing image...</p>
@@ -314,7 +316,7 @@ export default function ProductManagement() {
                       accept="image/*"
                       onChange={(e) => handleImageUpload(e, 'secondary')}
                       disabled={imageUploading}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
                     />
                     <p className="text-xs text-gray-500">
                       Supports JPEG, PNG (with transparency), and WebP formats. Max 250KB after compression.
@@ -345,15 +347,78 @@ export default function ProductManagement() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Size/Volume
+                    Size Variants
                   </label>
-                  <input
-                    type="text"
-                    value={formData.size}
-                    onChange={(e) => setFormData({ ...formData, size: e.target.value })}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="500ml, 1L, 2.5kg, etc."
-                  />
+                  <div className="space-y-3">
+                    {formData.sizeVariants.map((variant, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">
+                              Size/Volume *
+                            </label>
+                            <input
+                              type="text"
+                              required
+                              value={variant.size}
+                              onChange={(e) => {
+                                const newVariants = [...formData.sizeVariants]
+                                newVariants[index].size = e.target.value
+                                setFormData({ ...formData, sizeVariants: newVariants })
+                              }}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                              placeholder="500ml, 1L, 2.5kg"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 mb-1">
+                              Price *
+                            </label>
+                            <div className="flex space-x-2">
+                              <input
+                                type="number"
+                                required
+                                min="0"
+                                step="0.01"
+                                value={variant.price}
+                                onChange={(e) => {
+                                  const newVariants = [...formData.sizeVariants]
+                                  newVariants[index].price = e.target.value
+                                  setFormData({ ...formData, sizeVariants: newVariants })
+                                }}
+                                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-900"
+                                placeholder="99.99"
+                              />
+                              {formData.sizeVariants.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const newVariants = formData.sizeVariants.filter((_, i) => i !== index)
+                                    setFormData({ ...formData, sizeVariants: newVariants })
+                                  }}
+                                  className="px-3 py-2 text-red-600 border border-red-300 rounded-md hover:bg-red-50"
+                                >
+                                  ×
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData({
+                          ...formData,
+                          sizeVariants: [...formData.sizeVariants, { size: '', price: '' }]
+                        })
+                      }}
+                      className="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-primary-300 hover:text-primary-600 transition-colors"
+                    >
+                      + Add Size Variant
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex items-center">
@@ -416,7 +481,7 @@ export default function ProductManagement() {
                     Category
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Size
+                    Size Variants
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
@@ -485,7 +550,20 @@ export default function ProductManagement() {
                       {getCategoryName(product.category)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {product.size || 'N/A'}
+                      {product.sizeVariants && product.sizeVariants.length > 0 ? (
+                        <div className="space-y-1">
+                          {product.sizeVariants.map((variant, index) => (
+                            <div key={index} className="text-xs">
+                              <span className="font-medium">{variant.size}</span>
+                              {variant.price && (
+                                <span className="ml-2 text-green-600">₹{variant.price}</span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-gray-400">No variants</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
